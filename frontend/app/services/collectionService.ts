@@ -1,13 +1,15 @@
 import type { Collection } from "../types";
 
+const BE_URL = import.meta.env.BE_URL || "http://localhost:3000";
+
 export async function getCollections(): Promise<Record<string, Collection>> {
-  const data = await fetch("http://localhost:3000/api/collections");
+  const data = await fetch(BE_URL + "/api/collections");
   const collections = await data.json();
   return collections
 }
 
 export async function createCollection(collection: { name: string; description: string }): Promise<Collection> {
-  const response = await fetch("http://localhost:3000/api/collections", {
+  const response = await fetch(BE_URL + "/api/collections", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -23,13 +25,13 @@ export async function createCollection(collection: { name: string; description: 
 }
 
 export async function getCollection({ id }: { id: string }): Promise<Collection> {
-  const response = await fetch("http://localhost:3000/api/collection/" + id);
+  const response = await fetch(BE_URL + "/api/collection/" + id);
   const collections = await response.json();
   return collections;
 }
 
 export async function addQuestionToCollection(collectionId: string, question: string, answer: string): Promise<Collection> {
-  const response = await fetch("http://localhost:3000/api/collection/" + collectionId + "/questions", {
+  const response = await fetch(BE_URL + "/api/collection/" + collectionId + "/questions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -45,7 +47,7 @@ export async function addQuestionToCollection(collectionId: string, question: st
 }
 
 export async function removeQuestionFromCollection(collectionId: string, questionId: string): Promise<Collection> {
-  const response = await fetch("http://localhost:3000/api/collection/" + collectionId + "/questions/" + questionId, {
+  const response = await fetch(BE_URL + "/api/collection/" + collectionId + "/questions/" + questionId, {
     method: "DELETE",
   });
 
@@ -57,7 +59,7 @@ export async function removeQuestionFromCollection(collectionId: string, questio
 }
 
 export async function deleteCollection(collectionId: string): Promise<Collection> {
-  const response = await fetch("http://localhost:3000/api/collection/" + collectionId, {
+  const response = await fetch(BE_URL + "/api/collection/" + collectionId, {
     method: "DELETE",
   });
 
@@ -69,7 +71,7 @@ export async function deleteCollection(collectionId: string): Promise<Collection
 }
 
 export async function updateCollection(collectionId: string, collection: Collection): Promise<Collection> {
-  const response = await fetch("http://localhost:3000/api/collection/" + collectionId, {
+  const response = await fetch(BE_URL + "/api/collection/" + collectionId, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -86,7 +88,7 @@ export async function updateCollection(collectionId: string, collection: Collect
 }
 
 export async function updateQuestion(collectionId: string, questionId: string, question: string, answer: string): Promise<Collection> {
-  const response = await fetch("http://localhost:3000/api/collection/" + collectionId + "/questions/" + questionId, {
+  const response = await fetch(BE_URL + "/api/collection/" + collectionId + "/questions/" + questionId, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -96,6 +98,18 @@ export async function updateQuestion(collectionId: string, questionId: string, q
 
   if (!response.ok) {
     throw new Error("Failed to update question");
+  }
+
+  return response.json();
+}
+
+export async function deleteQuestion(collectionId: string, questionId: string): Promise<Collection> {
+  const response = await fetch(BE_URL + "/api/collection/" + collectionId + "/questions/" + questionId, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete question");
   }
 
   return response.json();

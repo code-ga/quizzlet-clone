@@ -4,6 +4,7 @@ import {
   getCollection,
   addQuestionToCollection,
   updateQuestion,
+  deleteQuestion,
 } from "../services/collectionService";
 import type { Collection, Question } from "../types";
 import {
@@ -49,12 +50,7 @@ function ViewCollectionPage({
 
   const handleDeleteQuestion = async (questionId: string) => {
     try {
-      await fetch(
-        `http://localhost:3000/api/collection/${collectionId}/questions/${questionId}`,
-        {
-          method: "DELETE",
-        }
-      );
+      await deleteQuestion(collectionId!, questionId);
       // Refresh the collection data after deleting a question
       const updatedCollection = await getCollection({ id: collectionId! });
       setCollection(updatedCollection);
@@ -112,6 +108,12 @@ function ViewCollectionPage({
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
             >
               Take Exam
+            </Link>
+            <Link
+              to={`/collection/${collectionId}/flashcard`}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+            >
+              Flashcard
             </Link>
           </div>
           <table className="w-full border mt-12">
